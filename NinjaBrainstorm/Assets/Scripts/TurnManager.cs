@@ -1,49 +1,50 @@
-using System.Threading;
 using UnityEngine;
-
-public enum Player { P1, P2 };
 
 // Class responsible for Managing turns between each Character
 public class TurnManager : MonoBehaviour
 {
-    // get the player
-    public Player currentPlayer = Player.P1;
+    // References to the two players/characters in the game
+    public Player player1;
+    public Player player2;
 
+    // Keeps track of the current Player 
+    private Player _currentPlayer;
 
-    [SerializeField] private float _turnTimer = 3f;
+    // Duration of each turn in seconds
+    [SerializeField] private float _turnTime = 3f;
     private float _timer = 0f;
 
     private void Start()
     {
-        _timer = _turnTimer;
-        BeginTurn();
+        _currentPlayer = player1;
+        _timer = _turnTime;
+
+        // Notify the current player that their turn has started
+        _currentPlayer.StartTurn();
+
     }
 
-    private void Update()
+    void Update()
     {
         _timer -= Time.deltaTime;
+
+        // Check if the current player's turn has ended
         if (_timer <= 0f)
         {
             SwitchTurn();
         }
     }
 
-    private void BeginTurn()
+    void SwitchTurn()
     {
-        Debug.Log("Current Turn to: " + currentPlayer);
-        _timer = _turnTimer;
-    }
+        // End the current player's turn logic
+        _currentPlayer.EndTurn();
 
-    private void SwitchTurn()
-    {
-        if (currentPlayer == Player.P1)
-        {
-            currentPlayer = Player.P2;
-        } else
-        {
-            currentPlayer = Player.P1;
-        }
+        // Switch to the other player
+        _currentPlayer = (_currentPlayer == player1) ? player2 : player1;
 
-        BeginTurn();
+        // Reset the timer and start the new turn
+        _timer = _turnTime;
+        _currentPlayer.StartTurn();
     }
 }
