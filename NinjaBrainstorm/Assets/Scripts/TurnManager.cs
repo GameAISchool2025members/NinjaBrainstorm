@@ -18,6 +18,7 @@ public class TurnManager : MonoBehaviour
     private int _currentRound;
     private bool _isPlayer1Turn;
 
+
     private void Start()
     {
         _currentPlayer = player1;
@@ -26,6 +27,9 @@ public class TurnManager : MonoBehaviour
         // Notify the current player that their turn has started
         _currentPlayer.StartTurn();
 
+        
+        UIManager.Instance.SetRound(_currentRound);
+        UIManager.Instance.SetPlayerNames(player1.playerName, player2.playerName);
         Debug.Log($"--- Round {_currentRound} ---");
     }
 
@@ -56,7 +60,11 @@ public class TurnManager : MonoBehaviour
             // One full round completed (Player1 and Player2 both had a turn)
             _currentPlayer = player1;
             _isPlayer1Turn = true;
-            _currentRound++; 
+            _currentRound++;
+
+            // update the UI 
+            UIManager.Instance.SetRound(_currentRound);
+
             Debug.Log($"--- Round {_currentRound} ---");
         }
 
