@@ -30,8 +30,10 @@ public class TurnManager : MonoBehaviour
         
         UIManager.Instance.SetRound(_currentRound);
         UIManager.Instance.SetPlayerNames(player1.playerName, player2.playerName);
+        UIManager.Instance.SetMaxHealth(player1.maxHealth);
         UIManager.Instance.SetHealth(player1.playerName, player1.currentHealth);
         UIManager.Instance.SetHealth(player2.playerName, player2.currentHealth);
+
         Debug.Log($"--- Round {_currentRound} ---");
     }
 

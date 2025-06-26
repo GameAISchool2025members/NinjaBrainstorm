@@ -1,6 +1,6 @@
 using TMPro;
 using UnityEngine;
-
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -9,9 +9,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI roundText;
     [SerializeField] private TextMeshProUGUI P1_Name;
     [SerializeField] private TextMeshProUGUI P2_Name;
-    [SerializeField] private TextMeshProUGUI P1_Health;
-    [SerializeField] private TextMeshProUGUI P2_Health;
 
+    [SerializeField] private Slider P1_HealthBar;
+    [SerializeField] private Slider P2_HealthBar;
 
 
     private void Awake()
@@ -33,13 +33,18 @@ public class UIManager : MonoBehaviour
         P1_Name.text = name1;
         P2_Name.text = name2;
     }
-
     public void SetHealth(string playerName, float healthVal)
     {
         if (playerName == P1_Name.text)
-            P1_Health.text = $"HP: {healthVal}";
+            P1_HealthBar.value = healthVal;
         else if (playerName == P2_Name.text)
-            P2_Health.text = $"HP: {healthVal}";
+            P2_HealthBar.value = healthVal;
+    }
+
+    public void SetMaxHealth(float maxHealth)
+    {
+        P1_HealthBar.maxValue = maxHealth;
+        P2_HealthBar.maxValue = maxHealth;
     }
 
 }
