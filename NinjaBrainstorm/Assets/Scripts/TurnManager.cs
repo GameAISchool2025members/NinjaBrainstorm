@@ -26,7 +26,6 @@ public class TurnManager : MonoBehaviour
 
         // Notify the current player that their turn has started
         _currentPlayer.StartTurn();
-
         
         UIManager.Instance.SetRound(_currentRound);
         UIManager.Instance.SetPlayerNames(player1.playerName, player2.playerName);
