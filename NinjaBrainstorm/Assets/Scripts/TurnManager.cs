@@ -14,6 +14,10 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private float _turnTime = 3f;
     private float _timer = 0f;
 
+    // Round System
+    private int _currentRound;
+    private bool _isPlayer1Turn;
+
     private void Start()
     {
         _currentPlayer = player1;
@@ -22,9 +26,10 @@ public class TurnManager : MonoBehaviour
         // Notify the current player that their turn has started
         _currentPlayer.StartTurn();
 
+        Debug.Log($"--- Round {_currentRound} ---");
     }
 
-    void Update()
+    private void Update()
     {
         _timer -= Time.deltaTime;
 
@@ -35,13 +40,25 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    void SwitchTurn()
+    private void SwitchTurn()
     {
         // End the current player's turn logic
         _currentPlayer.EndTurn();
 
-        // Switch to the other player
-        _currentPlayer = (_currentPlayer == player1) ? player2 : player1;
+        // Switch to the other player and update current round 
+        if (_currentPlayer == player1)
+        {
+            _currentPlayer = player2;
+            _isPlayer1Turn = false;
+        }
+        else
+        {
+            // One full round completed (Player1 and Player2 both had a turn)
+            _currentPlayer = player1;
+            _isPlayer1Turn = true;
+            _currentRound++; 
+            Debug.Log($"--- Round {_currentRound} ---");
+        }
 
         // Reset the timer and start the new turn
         _timer = _turnTime;
