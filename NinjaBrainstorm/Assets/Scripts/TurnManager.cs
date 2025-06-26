@@ -4,11 +4,11 @@ using UnityEngine;
 public class TurnManager : MonoBehaviour
 {
     // References to the two players/characters in the game
-    public Player player1;
-    public Player player2;
+    public PlayerController player1;
+    public PlayerController player2;
 
     // Keeps track of the current Player 
-    private Player _currentPlayer;
+    private PlayerController _currentPlayer;
 
     // Duration of each turn in seconds
     [SerializeField] private float _turnTime = 3f;
@@ -30,6 +30,8 @@ public class TurnManager : MonoBehaviour
         
         UIManager.Instance.SetRound(_currentRound);
         UIManager.Instance.SetPlayerNames(player1.playerName, player2.playerName);
+        UIManager.Instance.SetHealth(player1.playerName, player1.currentHealth);
+        UIManager.Instance.SetHealth(player2.playerName, player2.currentHealth);
         Debug.Log($"--- Round {_currentRound} ---");
     }
 

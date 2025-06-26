@@ -1,8 +1,15 @@
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     public string playerName;
+    public float  maxHealth = 100f;
+    public float  currentHealth;
+
+    private void Awake()
+    {
+        currentHealth = maxHealth;
+    }
 
     public void StartTurn()
     {

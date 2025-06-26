@@ -9,6 +9,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI roundText;
     [SerializeField] private TextMeshProUGUI P1_Name;
     [SerializeField] private TextMeshProUGUI P2_Name;
+    [SerializeField] private TextMeshProUGUI P1_Health;
+    [SerializeField] private TextMeshProUGUI P2_Health;
 
 
 
@@ -32,5 +34,12 @@ public class UIManager : MonoBehaviour
         P2_Name.text = name2;
     }
 
-    // For later: Add methods for health, stats, active player indicator, etc.
+    public void SetHealth(string playerName, float healthVal)
+    {
+        if (playerName == P1_Name.text)
+            P1_Health.text = $"HP: {healthVal}";
+        else if (playerName == P2_Name.text)
+            P2_Health.text = $"HP: {healthVal}";
+    }
+
 }
