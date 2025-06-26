@@ -27,7 +27,9 @@ public class TurnManager : MonoBehaviour
         // Notify the current player that their turn has started
         _currentPlayer.StartTurn();
         
+        // SYNC UI STUFF
         UIManager.Instance.SetRound(_currentRound);
+        UIManager.Instance.SetRoundCountdown(_timer);
         UIManager.Instance.SetPlayerNames(player1.playerName, player2.playerName);
         UIManager.Instance.SetMaxHealth(player1.maxHealth);
         UIManager.Instance.SetHealth(player1.playerName, player1.currentHealth);
@@ -39,6 +41,8 @@ public class TurnManager : MonoBehaviour
     private void Update()
     {
         _timer -= Time.deltaTime;
+
+        UIManager.Instance.SetRoundCountdown(_timer);
 
         // Check if the current player's turn has ended
         if (_timer <= 0f)
