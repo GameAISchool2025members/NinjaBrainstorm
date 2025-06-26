@@ -54,4 +54,18 @@ public class UIManager : MonoBehaviour
         roundCountdownText.text = $"{seconds:F1}s";
     }
 
+    public void SetHighlightedPlayer(string playerName)
+    {
+        if (playerName == P1_Name.text)
+        {
+            P1_Name.color = Color.yellow; 
+            P2_Name.color = Color.white;    
+        }
+        else
+        {
+            P1_Name.color = Color.white;
+            P2_Name.color = Color.yellow;
+        }
+    }
+
 }

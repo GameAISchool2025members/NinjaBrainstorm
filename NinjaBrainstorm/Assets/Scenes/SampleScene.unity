@@ -1822,7 +1822,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player1: {fileID: 963363778}
   player2: {fileID: 931349309}
-  _turnTime: 2
+  _turnTime: 3
 --- !u!4 &1757999771
 Transform:
   m_ObjectHideFlags: 0

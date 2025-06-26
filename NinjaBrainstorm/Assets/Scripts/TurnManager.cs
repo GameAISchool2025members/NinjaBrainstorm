@@ -34,6 +34,7 @@ public class TurnManager : MonoBehaviour
         UIManager.Instance.SetMaxHealth(player1.maxHealth);
         UIManager.Instance.SetHealth(player1.playerName, player1.currentHealth);
         UIManager.Instance.SetHealth(player2.playerName, player2.currentHealth);
+        UIManager.Instance.SetHighlightedPlayer(_currentPlayer.playerName);
 
         Debug.Log($"--- Round {_currentRound} ---");
     }
@@ -74,6 +75,8 @@ public class TurnManager : MonoBehaviour
 
             Debug.Log($"--- Round {_currentRound} ---");
         }
+
+        UIManager.Instance.SetHighlightedPlayer(_currentPlayer.playerName);
 
         // Reset the timer and start the new turn
         _timer = _turnTime;
