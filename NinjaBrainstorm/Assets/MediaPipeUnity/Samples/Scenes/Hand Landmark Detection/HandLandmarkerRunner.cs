@@ -167,7 +167,7 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
     // First character is: P = Attack, D = Defense
     // Second character is: W = water, F = fire, G = grass, A = air
     // after the '+' is the angle of the attack 
-    public void getPower()
+    public string getPower()
     {
       return "PW+90"; // This is a placeholder for the actual implementation to get the power and angle
     }
