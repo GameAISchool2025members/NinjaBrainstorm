@@ -3,29 +3,35 @@
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
-
+using UnityEngine;
 using System.Collections.Generic;
 using Mediapipe.Tasks.Components.Containers;
+using System.Collections.Generic;
+using System;
+using System.Linq;
 
 namespace Mediapipe.Tasks.Vision.HandLandmarker
 {
   /// <summary>
   ///   The hand landmarks result from HandLandmarker, where each vector element represents a single hand detected in the image.
   /// </summary>
-  public readonly struct HandLandmarkerResult
+  public struct HandLandmarkerResult
   {
     /// <summary>
     ///   Classification of handedness.
     /// </summary>
-    public readonly List<Classifications> handedness;
+    public List<Classifications> handedness;
     /// <summary>
     ///   Detected hand landmarks in normalized image coordinates.
     /// </summary>
-    public readonly List<NormalizedLandmarks> handLandmarks;
+    public List<NormalizedLandmarks> handLandmarks;
     /// <summary>
     ///   Detected hand landmarks in world coordinates.
     /// </summary>
-    public readonly List<Landmarks> handWorldLandmarks;
+    public List<Landmarks> handWorldLandmarks;
+
+    public float straightFingerAngleThreshold;
+    public float fingerUpToleranceY;
 
     internal HandLandmarkerResult(List<Classifications> handedness,
         List<NormalizedLandmarks> handLandmarks, List<Landmarks> handWorldLandmarks)
@@ -33,6 +39,8 @@ namespace Mediapipe.Tasks.Vision.HandLandmarker
       this.handedness = handedness;
       this.handLandmarks = handLandmarks;
       this.handWorldLandmarks = handWorldLandmarks;
+      this.straightFingerAngleThreshold = 30.0f;
+      this.fingerUpToleranceY = 0.05f;
     }
 
     public static HandLandmarkerResult Alloc(int capacity)
@@ -63,23 +71,50 @@ namespace Mediapipe.Tasks.Vision.HandLandmarker
       destination = new HandLandmarkerResult(dstHandedness, dstHandLandmarks, dstHandWorldLandmarks);
     }
 
+    public class LandmarkCoordinates
+    {
+      public float x;
+      public float y;
+      public float z;
+
+      public override string ToString()
+      {
+        return $"{{ x: {x}, y: {y}, z: {z} }}";
+      }
+    }
+
     public string getLandmarks()
     {
       var currentHandLanmarks = handWorldLandmarks[0];
 
+      List<LandmarkCoordinates> landmarkCoordinates = new List<LandmarkCoordinates>();
+
       int i = 0;
       foreach (var landmark in currentHandLanmarks.landmarks)
       {
+        LandmarkCoordinates landmarkCoord = new LandmarkCoordinates();
+        landmarkCoord.x = landmark.x;
+        landmarkCoord.y = landmark.y;
+        landmarkCoord.z = landmark.z;
+
+        landmarkCoordinates.Add(landmarkCoord);
         if (i == 4)
         {
-          return landmark.ToString();
+          return landmarkCoord.ToString();
         }
         i++;
       }
-      return "Keep trying bro";
+
+
+      // FingerStates currentStates = ProcessHandLandmarks(debugMode: true);
+      // // Debug.Log("Processed Finger States: \n" + currentStates.ToString());
+      // return currentStates.ToString();
+
+      return "Put your hands bro bro";
     }
 
     public override string ToString()
       => $"{{ \"handedness\": {Util.Format(handedness)}, \"handLandmarks\": {Util.Format(handLandmarks)}, \"handWorldLandmarks\": {Util.Format(handWorldLandmarks)} }}";
+
   }
 }
