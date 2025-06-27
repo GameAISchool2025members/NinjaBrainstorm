@@ -154,7 +154,7 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
     private void OnHandLandmarkDetectionOutput(HandLandmarkerResult result, Image image, long timestamp)
     {
       _handLandmarkerResultAnnotationController.DrawLater(result);
-      Debug.Log(result.getGesture());
+      // Debug.Log(result.getLandmarks());
       // foreach (var landmark in result.handWorldLandmarks)
       // {
       //   // Log each landmark's position and timestamp
