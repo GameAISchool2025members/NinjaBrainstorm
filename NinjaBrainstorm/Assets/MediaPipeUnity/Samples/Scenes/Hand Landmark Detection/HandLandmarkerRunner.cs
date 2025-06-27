@@ -160,22 +160,24 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
     {
       _handLandmarkerResultAnnotationController.DrawLater(result);
 
-      Random rnd = new Random();
-      int randomAngle = rnd.Next(1, 90);
+      // Random rnd = new Random();
+      int randomAngle = 10;
       Debug.Log(result.getGesture());
+
+      currentGesture = result.getGesture(); // Get the current gesture from the result
 
       if (currentGesture != "null") // No gesture detected
       {
-        if (currentGesture == "P" || currentGesture == "D") // P or D
+        if (currentGesture == "attack" || currentGesture == "defense") // P or D
         {
-          currentAD = currentGesture; // P or D
+          currentAD = currentGesture + "_"; // P or D
           currentAction = currentAD;
         }
-        else if (currentGesture == "W" || currentGesture == "F" || currentGesture == "G" || currentGesture == "A") // W, F, G, A
+        else
         {
           currentElement = currentGesture; // W, F, G, A
           currentAction += currentElement;
-          AddActionToQueue(currentAction + "+" + randomAngle);
+          AddActionToQueue(currentAction + "_" + randomAngle);
           Debug.Log($"Action added to queue: {currentAction} + {randomAngle}");
         }
       }
