@@ -449,7 +449,7 @@ namespace Mediapipe.Tasks.Vision.HandLandmarker
                     general_hand_angle_check = true,
                     max_general_hand_angle = 20f
                 },
-                text_to_display = "defend, select element",
+                text_to_display = "defend",
                 code = "D"
             },
             new GestureRule
@@ -464,7 +464,7 @@ namespace Mediapipe.Tasks.Vision.HandLandmarker
                     general_hand_angle_check = true,
                     max_general_hand_angle = 20f
                 },
-                text_to_display = "attack, select element",
+                text_to_display = "attack",
                 code = "P"
             },
             new GestureRule
@@ -479,7 +479,7 @@ namespace Mediapipe.Tasks.Vision.HandLandmarker
                     general_hand_angle_check = true,
                     max_general_hand_angle = 45f
                 },
-                text_to_display = "fire power selected",
+                text_to_display = "fire",
                 code = "F"
             },
             new GestureRule
@@ -501,7 +501,7 @@ namespace Mediapipe.Tasks.Vision.HandLandmarker
                     general_hand_angle_check = true,
                     max_general_hand_angle = 20f
                 },
-                text_to_display = "grass power selected",
+                text_to_display = "grass",
                 code = "G"
             },
             new GestureRule
@@ -522,7 +522,7 @@ namespace Mediapipe.Tasks.Vision.HandLandmarker
                     max_relative_thumb_angle = 14f,
                     general_hand_angle_check = false // No se verifica el ángulo general para esta regla
                 },
-                text_to_display = "water power selected",
+                text_to_display = "water",
                 code = "W"
             }
         };
@@ -584,11 +584,11 @@ namespace Mediapipe.Tasks.Vision.HandLandmarker
         if (!match) continue;
 
         // Si todas las condiciones coinciden, hemos encontrado el gesto
-        return rule.code;
+        return rule.text_to_display;
       }
 
       // Si ninguna regla coincide
-      return "null";
+      return "No hay gesto reconocido.";
     }
     
     public string getGesture()

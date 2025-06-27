@@ -152,12 +152,33 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
       }
     }
 
+    public string currentGesture = ""; // Variable to store the current gesture
+    private string currentAD = ""; // Variable to store the current action (Attack or Defense)
+    private string currentElement = ""; // Variable to store the current element (Water, Fire, Grass, Air)
+    private string currentAction = ""; // Variable to store the current action (Attack/
     private void OnHandLandmarkDetectionOutput(HandLandmarkerResult result, Image image, long timestamp)
     {
       _handLandmarkerResultAnnotationController.DrawLater(result);
-      int randomAngle = UnityEngine.Random.Range(0, 91);
+
+      Random rnd = new Random();
+      int randomAngle = rnd.Next(1, 90);
       Debug.Log(result.getGesture());
-      
+
+      if (currentGesture != "null") // No gesture detected
+      {
+        if (currentGesture == "P" || currentGesture == "D") // P or D
+        {
+          currentAD = currentGesture; // P or D
+          currentAction = currentAD;
+        }
+        else if (currentGesture == "W" || currentGesture == "F" || currentGesture == "G" || currentGesture == "A") // W, F, G, A
+        {
+          currentElement = currentGesture; // W, F, G, A
+          currentAction += currentElement;
+          AddActionToQueue(currentAction + "+" + randomAngle);
+          Debug.Log($"Action added to queue: {currentAction} + {randomAngle}");
+        }
+      }
     }
 
     // Global variable to store actions
