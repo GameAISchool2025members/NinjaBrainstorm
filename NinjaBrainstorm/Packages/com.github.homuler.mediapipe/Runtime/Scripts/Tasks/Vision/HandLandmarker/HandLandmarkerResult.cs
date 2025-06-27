@@ -408,6 +408,8 @@ namespace Mediapipe.Tasks.Vision.HandLandmarker
       public string name;
       public Condition condition;
       public string text_to_display;
+
+      public string code; // Código asociado a la regla, por ejemplo "D", "P", "F", "G", "W"
     }
 
     public class Condition

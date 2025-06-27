@@ -154,7 +154,8 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
     private void OnHandLandmarkDetectionOutput(HandLandmarkerResult result, Image image, long timestamp)
     {
       _handLandmarkerResultAnnotationController.DrawLater(result);
-      // Debug.Log(result.getLandmarks());
+      int randomAngle = UnityEngine.Random.Range(0, 91);
+      Debug.Log(result.getGesture());
       // foreach (var landmark in result.handWorldLandmarks)
       // {
       //   // Log each landmark's position and timestamp
@@ -163,13 +164,22 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
       // }
     }
 
+    // Global variable to store actions
+    public static List<string> ActionsQeue = new List<string>();
+
+    // Method to add a string to ActionsQeue
+    public void AddActionToQueue(string action)
+    {
+      ActionsQeue.Add(action);
+    }
+
     // Angle maximim 90
     // First character is: P = Attack, D = Defense
     // Second character is: W = water, F = fire, G = grass, A = air
     // after the '+' is the angle of the attack 
-    public string getPower()
+    public List<string> getPower()
     {
-      return "PW+90"; // This is a placeholder for the actual implementation to get the power and angle
+      return ActionsQeue;
     }
   }
 }
