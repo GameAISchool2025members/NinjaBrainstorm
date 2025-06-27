@@ -34,6 +34,8 @@ namespace Mediapipe.Tasks.Vision.HandLandmarker
     public float straightFingerAngleThreshold;
     public float fingerUpToleranceY;
 
+    private List<GestureRule> hardcodedRules;
+
     internal HandLandmarkerResult(List<Classifications> handedness,
         List<NormalizedLandmarks> handLandmarks, List<Landmarks> handWorldLandmarks)
     {
@@ -42,6 +44,94 @@ namespace Mediapipe.Tasks.Vision.HandLandmarker
       this.handWorldLandmarks = handWorldLandmarks;
       this.straightFingerAngleThreshold = 30.0f; // Valor predeterminado
       this.fingerUpToleranceY = 0.05f; // Valor predeterminado
+
+      // Initialize hardcodedRules here
+      hardcodedRules = new List<GestureRule>
+        {
+            new GestureRule
+            {
+                name = "defend_select_element",
+                condition = new Condition
+                {
+                    middle_finger_stretched = true,
+                    index_finger_stretched = false,
+                    pinky_finger_stretched = false,
+                    ring_finger_stretched = false,
+                    general_hand_angle_check = true,
+                    max_general_hand_angle = 20f
+                },
+                text_to_display = "defend, select element"
+            },
+            new GestureRule
+            {
+                name = "attack_select_element",
+                condition = new Condition
+                {
+                    index_finger_stretched = true,
+                    pinky_finger_stretched = true,
+                    middle_finger_stretched = false,
+                    ring_finger_stretched = false,
+                    general_hand_angle_check = true,
+                    max_general_hand_angle = 20f
+                },
+                text_to_display = "attack, select element"
+            },
+            new GestureRule
+            {
+                name = "fire_power_selected",
+                condition = new Condition
+                {
+                    index_finger_stretched = true,
+                    middle_finger_stretched = true,
+                    pinky_finger_stretched = false,
+                    ring_finger_stretched = false,
+                    general_hand_angle_check = true,
+                    max_general_hand_angle = 45f
+                },
+                text_to_display = "fire power selected"
+            },
+            new GestureRule
+            {
+                name = "grass_power_selected",
+                condition = new Condition
+                {
+                    index_finger_stretched = true,
+                    middle_finger_stretched = true,
+                    ring_finger_stretched = true,
+                    pinky_finger_stretched = true,
+                    fingers_up_check = true,
+                    index_finger_up = true,
+                    middle_finger_up = true,
+                    ring_finger_up = true,
+                    pinky_finger_up = true,
+                    relative_thumb_angle_check = true,
+                    max_relative_thumb_angle = 30f,
+                    general_hand_angle_check = true,
+                    max_general_hand_angle = 20f
+                },
+                text_to_display = "grass power selected"
+            },
+            new GestureRule
+            {
+                name = "water_power_selected",
+                condition = new Condition
+                {
+                    index_finger_stretched = false,
+                    middle_finger_stretched = false,
+                    ring_finger_stretched = false,
+                    pinky_finger_stretched = false,
+                    fingers_up_check = true,
+                    index_finger_up = false,
+                    middle_finger_up = false,
+                    ring_finger_up = false,
+                    pinky_finger_up = false,
+                    relative_thumb_angle_check = true,
+                    max_relative_thumb_angle = 14f,
+                    general_hand_angle_check = false // No se verifica el ángulo general para esta regla
+                },
+                text_to_display = "water power selected"
+            }
+        };
     }
 
     public static HandLandmarkerResult Alloc(int capacity)
@@ -82,34 +172,6 @@ namespace Mediapipe.Tasks.Vision.HandLandmarker
       {
         return $"{{ x: {x}, y: {y}, z: {z} }}";
       }
-    }
-
-    public string getLandmarks()
-    {
-      if (handWorldLandmarks == null || handWorldLandmarks.Count == 0)
-      {
-        Debug.LogWarning("No hand world landmarks available to process.");
-        return "No hand detected.";
-      }
-
-      // Assuming that the first hand is the one we want to process
-      var currentHandLandmarksMediapipe = handWorldLandmarks[0];
-
-      List<LandmarkCoordinates> landmarkCoordinates = new List<LandmarkCoordinates>();
-
-      // Convert Mediapipe's Landmark objects to our custom LandmarkCoordinates
-      foreach (var landmark in currentHandLandmarksMediapipe.landmarks)
-      {
-        LandmarkCoordinates landmarkCoord = new LandmarkCoordinates();
-        landmarkCoord.x = landmark.x;
-        landmarkCoord.y = landmark.y;
-        landmarkCoord.z = landmark.z;
-        landmarkCoordinates.Add(landmarkCoord);
-      }
-
-      // Process the converted landmarks
-      FingerStates currentStates = ProcessHandLandmarks(landmarkCoordinates, debugMode: true);
-      return currentStates.ToString();
     }
 
     public override string ToString()
@@ -339,6 +401,222 @@ namespace Mediapipe.Tasks.Vision.HandLandmarker
       }
 
       return fingerStates;
+    }
+
+    public class GestureRule
+    {
+      public string name;
+      public Condition condition;
+      public string text_to_display;
+    }
+
+    public class Condition
+    {
+      public bool? index_finger_stretched; // Usamos 'bool?' para permitir valores nulos (no especificados)
+      public bool? middle_finger_stretched;
+      public bool? ring_finger_stretched;
+      public bool? pinky_finger_stretched;
+
+      public bool? fingers_up_check; // Indica si se deben verificar las condiciones de 'up'
+      public bool? index_finger_up;
+      public bool? middle_finger_up;
+      public bool? ring_finger_up;
+      public bool? pinky_finger_up;
+
+      public bool? relative_thumb_angle_check; // Indica si se debe verificar el ángulo relativo del pulgar
+      public float? max_relative_thumb_angle; // 'float?' para valores nulos
+
+      public bool? general_hand_angle_check; // Indica si se debe verificar el ángulo general de la mano
+      public float? max_general_hand_angle; // 'float?' para valores nulos
+    }
+
+    void Awake()
+    {
+      // Inicializa las reglas hardcodeadas aquí
+      hardcodedRules = new List<GestureRule>
+        {
+            new GestureRule
+            {
+                name = "defend_select_element",
+                condition = new Condition
+                {
+                    middle_finger_stretched = true,
+                    index_finger_stretched = false,
+                    pinky_finger_stretched = false,
+                    ring_finger_stretched = false,
+                    general_hand_angle_check = true,
+                    max_general_hand_angle = 20f
+                },
+                text_to_display = "defend, select element",
+                code = "D"
+            },
+            new GestureRule
+            {
+                name = "attack_select_element",
+                condition = new Condition
+                {
+                    index_finger_stretched = true,
+                    pinky_finger_stretched = true,
+                    middle_finger_stretched = false,
+                    ring_finger_stretched = false,
+                    general_hand_angle_check = true,
+                    max_general_hand_angle = 20f
+                },
+                text_to_display = "attack, select element",
+                code = "P"
+            },
+            new GestureRule
+            {
+                name = "fire_power_selected",
+                condition = new Condition
+                {
+                    index_finger_stretched = true,
+                    middle_finger_stretched = true,
+                    pinky_finger_stretched = false,
+                    ring_finger_stretched = false,
+                    general_hand_angle_check = true,
+                    max_general_hand_angle = 45f
+                },
+                text_to_display = "fire power selected",
+                code = "F"
+            },
+            new GestureRule
+            {
+                name = "grass_power_selected",
+                condition = new Condition
+                {
+                    index_finger_stretched = true,
+                    middle_finger_stretched = true,
+                    ring_finger_stretched = true,
+                    pinky_finger_stretched = true,
+                    fingers_up_check = true,
+                    index_finger_up = true,
+                    middle_finger_up = true,
+                    ring_finger_up = true,
+                    pinky_finger_up = true,
+                    relative_thumb_angle_check = true,
+                    max_relative_thumb_angle = 30f,
+                    general_hand_angle_check = true,
+                    max_general_hand_angle = 20f
+                },
+                text_to_display = "grass power selected",
+                code = "G"
+            },
+            new GestureRule
+            {
+                name = "water_power_selected",
+                condition = new Condition
+                {
+                    index_finger_stretched = false,
+                    middle_finger_stretched = false,
+                    ring_finger_stretched = false,
+                    pinky_finger_stretched = false,
+                    fingers_up_check = true,
+                    index_finger_up = false,
+                    middle_finger_up = false,
+                    ring_finger_up = false,
+                    pinky_finger_up = false,
+                    relative_thumb_angle_check = true,
+                    max_relative_thumb_angle = 14f,
+                    general_hand_angle_check = false // No se verifica el ángulo general para esta regla
+                },
+                text_to_display = "water power selected",
+                code = "W"
+            }
+        };
+    }
+
+    public string IdentifyGesture(FingerStates fingerStates)
+    {
+      if (fingerStates == null)
+      {
+        Debug.LogWarning("FingerStates es nulo. No se puede identificar el gesto.");
+        return "";
+      }
+
+      foreach (GestureRule rule in hardcodedRules)
+      {
+        bool match = true;
+        Condition condition = rule.condition;
+
+        // Comprobar condiciones de dedos estirados
+        if (condition.index_finger_stretched.HasValue && condition.index_finger_stretched.Value != fingerStates.index_finger_stretched) match = false;
+        if (condition.middle_finger_stretched.HasValue && condition.middle_finger_stretched.Value != fingerStates.middle_finger_stretched) match = false;
+        if (condition.ring_finger_stretched.HasValue && condition.ring_finger_stretched.Value != fingerStates.ring_finger_stretched) match = false;
+        if (condition.pinky_finger_stretched.HasValue && condition.pinky_finger_stretched.Value != fingerStates.pinky_finger_stretched) match = false;
+
+        if (!match) continue; // Si ya no coincide, pasa a la siguiente regla
+
+        // Comprobar si los dedos apuntan hacia arriba (si la regla lo requiere)
+        if (condition.fingers_up_check.HasValue && condition.fingers_up_check.Value)
+        {
+          if (condition.index_finger_up.HasValue && condition.index_finger_up.Value != fingerStates.index_finger_up) match = false;
+          if (condition.middle_finger_up.HasValue && condition.middle_finger_up.Value != fingerStates.middle_finger_up) match = false;
+          if (condition.ring_finger_up.HasValue && condition.ring_finger_up.Value != fingerStates.ring_finger_up) match = false;
+          if (condition.pinky_finger_up.HasValue && condition.pinky_finger_up.Value != fingerStates.pinky_finger_up) match = false;
+        }
+        if (!match) continue;
+
+        // Comprobar ángulo relativo al pulgar (si la regla lo requiere)
+        if (condition.relative_thumb_angle_check.HasValue && condition.relative_thumb_angle_check.Value)
+        {
+          float maxRelativeAngle = condition.max_relative_thumb_angle ?? 180f; // Usar 180 si no se especifica
+
+          // Solo verificamos el ángulo de los dedos ESTIRADOS si la regla lo requiere
+          if (fingerStates.index_finger_stretched && fingerStates.index_angle_relative_to_thumb > maxRelativeAngle) match = false;
+          if (fingerStates.middle_finger_stretched && fingerStates.middle_angle_relative_to_thumb > maxRelativeAngle) match = false;
+          if (fingerStates.ring_finger_stretched && fingerStates.ring_angle_relative_to_thumb > maxRelativeAngle) match = false;
+          if (fingerStates.pinky_finger_stretched && fingerStates.pinky_angle_relative_to_thumb > maxRelativeAngle) match = false;
+        }
+        if (!match) continue;
+
+        // Comprobar ángulo general de la mano respecto al eje Y (si la regla lo requiere)
+        if (condition.general_hand_angle_check.HasValue && condition.general_hand_angle_check.Value)
+        {
+          float maxGeneralAngle = condition.max_general_hand_angle ?? 180f; // Usar 180 si no se especifica
+          if (fingerStates.general_hand_angle_to_y_axis > maxGeneralAngle)
+          {
+            match = false;
+          }
+        }
+        if (!match) continue;
+
+        // Si todas las condiciones coinciden, hemos encontrado el gesto
+        return rule.code;
+      }
+
+      // Si ninguna regla coincide
+      return "null";
+    }
+    
+    public string getGesture()
+    {
+      if (handWorldLandmarks == null || handWorldLandmarks.Count == 0)
+      {
+        Debug.LogWarning("No hand world landmarks available to process.");
+        return "No hand detected.";
+      }
+
+      // Assuming that the first hand is the one we want to process
+      var currentHandLandmarksMediapipe = handWorldLandmarks[0];
+
+      List<LandmarkCoordinates> landmarkCoordinates = new List<LandmarkCoordinates>();
+
+      // Convert Mediapipe's Landmark objects to our custom LandmarkCoordinates
+      foreach (var landmark in currentHandLandmarksMediapipe.landmarks)
+      {
+        LandmarkCoordinates landmarkCoord = new LandmarkCoordinates();
+        landmarkCoord.x = landmark.x;
+        landmarkCoord.y = landmark.y;
+        landmarkCoord.z = landmark.z;
+        landmarkCoordinates.Add(landmarkCoord);
+      }
+
+      // Process the converted landmarks
+      FingerStates currentStates = ProcessHandLandmarks(landmarkCoordinates, debugMode: false);
+
+      // Debug.Log($"Gesto para State: {IdentifyGesture(currentStates)}");
+      return IdentifyGesture(currentStates);
     }
   }
   
