@@ -179,6 +179,7 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
           currentAction += currentElement;
           AddActionToQueue(currentAction + "_" + randomAngle);
           Debug.Log($"Action added to queue: {currentAction} + {randomAngle}");
+          currentAction = "";
         }
       }
     }

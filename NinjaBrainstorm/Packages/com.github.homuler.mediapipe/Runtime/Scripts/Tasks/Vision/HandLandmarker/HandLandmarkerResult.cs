@@ -588,17 +588,11 @@ namespace Mediapipe.Tasks.Vision.HandLandmarker
       }
 
       // Si ninguna regla coincide
-      return "No hay gesto reconocido.";
+      return "null";
     }
     
     public string getGesture()
     {
-      if (handWorldLandmarks == null || handWorldLandmarks.Count == 0)
-      {
-        Debug.LogWarning("No hand world landmarks available to process.");
-        return "No hand detected.";
-      }
-
       // Assuming that the first hand is the one we want to process
       var currentHandLandmarksMediapipe = handWorldLandmarks[0];
 
