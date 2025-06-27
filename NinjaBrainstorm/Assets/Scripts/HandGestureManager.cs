@@ -4,9 +4,9 @@ public class HandGestureManager : MonoBehaviour
 {
     public static HandGestureManager Instance;
 
-    [SerializeField] private PlayerController player1;
-    [SerializeField] private PlayerController player2;
-    private PlayerController _currentPlayer;
+    [SerializeField] private S_PlayerController player1;
+    [SerializeField] private S_PlayerController player2;
+    private S_PlayerController _currentPlayer;
 
     private void Awake()
     {
@@ -16,7 +16,7 @@ public class HandGestureManager : MonoBehaviour
             Instance = this;
     }
 
-    public void SetCurrentPlayer(PlayerController player)
+    public void SetCurrentPlayer(S_PlayerController player)
     {
         _currentPlayer = player;
     }
@@ -25,7 +25,7 @@ public class HandGestureManager : MonoBehaviour
     {
         if (_currentPlayer != null)
         {
-            _currentPlayer.RegisterGesture(gesture);
+           _currentPlayer.RegisterGesture(gesture);
         }
     }
 

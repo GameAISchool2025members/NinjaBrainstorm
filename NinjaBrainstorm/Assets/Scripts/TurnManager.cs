@@ -62,7 +62,7 @@ public class TurnManager : MonoBehaviour
         HandGestureManager.Instance.SetCurrentPlayer(_currentPlayer);
 
         // clear old gestures/UI
-        _currentPlayer.ClearGestures();
+         _currentPlayer.ClearGestures();
         UIManager.Instance.ClearGestureIcons(_currentPlayer.playerName);
 
         // Switch to the other player and update current round 
