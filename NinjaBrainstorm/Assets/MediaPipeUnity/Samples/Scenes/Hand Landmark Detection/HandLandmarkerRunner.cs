@@ -5,6 +5,7 @@
 // https://opensource.org/licenses/MIT.
 
 using System.Collections;
+using System.Collections.Generic;
 using Mediapipe.Tasks.Vision.HandLandmarker;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -156,16 +157,11 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
       _handLandmarkerResultAnnotationController.DrawLater(result);
       int randomAngle = UnityEngine.Random.Range(0, 91);
       Debug.Log(result.getGesture());
-      // foreach (var landmark in result.handWorldLandmarks)
-      // {
-      //   // Log each landmark's position and timestamp
-      //   Debug.Log($"Hand landmark: {landmark.ToString()} at {timestamp} ms");
-
-      // }
+      
     }
 
     // Global variable to store actions
-    public static List<string> ActionsQeue = new List<string>();
+    public List<string> ActionsQeue = new List<string>();
 
     // Method to add a string to ActionsQeue
     public void AddActionToQueue(string action)
