@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -7,7 +9,8 @@ public class PlayerController : MonoBehaviour
     public float  currentHealth;
 
     [SerializeField] bool DEBUG_takeHealthDamage = false;
-
+    private Queue<HandGesture> recentGestures = new Queue<HandGesture>();
+    private const int maxGestureCount = 5;
     private void Awake()
     {
         currentHealth = maxHealth;
@@ -39,5 +42,23 @@ public class PlayerController : MonoBehaviour
     {
         currentHealth -= damageAmount;
         currentHealth = Mathf.Max(currentHealth, 0);
+    }
+
+    public void RegisterGesture(HandGesture gesture)
+    {
+        if (recentGestures.Count >= maxGestureCount)
+            recentGestures.Dequeue();
+
+        recentGestures.Enqueue(gesture);
+        Debug.Log($"{playerName} registered gesture: {gesture}");
+
+        UIManager.Instance.AddGestureIcon(playerName, gesture);
+
+    }
+
+    public void ClearGestures()
+    {
+        recentGestures.Clear();
+        Debug.Log($"{playerName} gesture queue cleared.");
     }
 }

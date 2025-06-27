@@ -22,6 +22,8 @@ public class TurnManager : MonoBehaviour
     private void Start()
     {
         _currentPlayer = player1;
+        HandGestureManager.Instance.SetCurrentPlayer(_currentPlayer);
+
         _timer = _turnTime;
 
         // Notify the current player that their turn has started
@@ -57,6 +59,12 @@ public class TurnManager : MonoBehaviour
         // End the current player's turn logic
         _currentPlayer.EndTurn();
 
+        HandGestureManager.Instance.SetCurrentPlayer(_currentPlayer);
+
+        // clear old gestures/UI
+        _currentPlayer.ClearGestures();
+        UIManager.Instance.ClearGestureIcons(_currentPlayer.playerName);
+
         // Switch to the other player and update current round 
         if (_currentPlayer == player1)
         {
@@ -77,6 +85,7 @@ public class TurnManager : MonoBehaviour
         }
 
         UIManager.Instance.SetHighlightedPlayer(_currentPlayer.playerName);
+        HandGestureManager.Instance.SetCurrentPlayer(_currentPlayer);
 
         // Reset the timer and start the new turn
         _timer = _turnTime;
