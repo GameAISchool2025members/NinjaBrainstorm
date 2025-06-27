@@ -63,6 +63,22 @@ namespace Mediapipe.Tasks.Vision.HandLandmarker
       destination = new HandLandmarkerResult(dstHandedness, dstHandLandmarks, dstHandWorldLandmarks);
     }
 
+    public string getLandmarks()
+    {
+      var currentHandLanmarks = handWorldLandmarks[0];
+
+      int i = 0;
+      foreach (var landmark in currentHandLanmarks.landmarks)
+      {
+        if (i == 4)
+        {
+          return landmark.ToString();
+        }
+        i++;
+      }
+      return "Keep trying bro";
+    }
+
     public override string ToString()
       => $"{{ \"handedness\": {Util.Format(handedness)}, \"handLandmarks\": {Util.Format(handLandmarks)}, \"handWorldLandmarks\": {Util.Format(handWorldLandmarks)} }}";
   }
