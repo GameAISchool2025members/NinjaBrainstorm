@@ -162,5 +162,10 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
 
       // }
     }
+
+    // Angle maximim 90
+    public void getPower() {
+      return "PW+90"; // This is a placeholder for the actual implementation to get the power and angle
+    }
   }
 }
